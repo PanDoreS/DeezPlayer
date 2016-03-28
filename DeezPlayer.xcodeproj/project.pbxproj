@@ -38,7 +38,6 @@
 		59AF23741591CD6800FD9E05 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 59AF23711591CCAB00FD9E05 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		59AF23761591CDBA00FD9E05 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 59AF23751591CDBA00FD9E05 /* dsa_pub.pem */; };
 		59FAC26C15910053007B0F87 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59FAC26B15910053007B0F87 /* Cocoa.framework */; };
-		59FAC27615910053007B0F87 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 59FAC27415910053007B0F87 /* InfoPlist.strings */; };
 		59FAC27815910053007B0F87 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 59FAC27715910053007B0F87 /* main.m */; };
 		59FAC28B1591009B007B0F87 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 59FAC28A1591009B007B0F87 /* icon.icns */; };
 		59FAC294159100F2007B0F87 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 59FAC293159100F2007B0F87 /* MainMenu.xib */; };
@@ -90,7 +89,6 @@
 		59FAC26F15910053007B0F87 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		59FAC27015910053007B0F87 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		59FAC27315910053007B0F87 /* DeezPlayer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DeezPlayer-Info.plist"; sourceTree = "<group>"; };
-		59FAC27515910053007B0F87 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		59FAC27715910053007B0F87 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		59FAC27915910053007B0F87 /* DeezPlayer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DeezPlayer-Prefix.pch"; sourceTree = "<group>"; };
 		59FAC28A1591009B007B0F87 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = icon.icns; path = ../icon.icns; sourceTree = "<group>"; };
@@ -192,7 +190,6 @@
 				59FAC292159100E6007B0F87 /* SPMediaKeyTap */,
 				59FAC28A1591009B007B0F87 /* icon.icns */,
 				59FAC27315910053007B0F87 /* DeezPlayer-Info.plist */,
-				59FAC27415910053007B0F87 /* InfoPlist.strings */,
 				59FAC27715910053007B0F87 /* main.m */,
 				59FAC27915910053007B0F87 /* DeezPlayer-Prefix.pch */,
 				59AB0A06159142250010365B /* CHANGELOG.md */,
@@ -302,7 +299,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				59FAC27615910053007B0F87 /* InfoPlist.strings in Resources */,
 				59FAC28B1591009B007B0F87 /* icon.icns in Resources */,
 				59FAC294159100F2007B0F87 /* MainMenu.xib in Resources */,
 				59AB09EF15910EC00010365B /* deezer-logo.png in Resources */,
@@ -355,17 +351,6 @@
 			targetProxy = 59AF236E1591C59400FD9E05 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		59FAC27415910053007B0F87 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				59FAC27515910053007B0F87 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		59AF236B1591C57800FD9E05 /* Debug */ = {

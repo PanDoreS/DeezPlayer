@@ -15,7 +15,7 @@
     [self setBackground];
     [self setUserAgent];
     [self setUserStylesheet];
-    [[webView mainFrame] loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://deezer.com/"]]];
+    [[webView mainFrame] loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://deezer.com/"]]];
 }
 
 - (void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {
@@ -76,6 +76,8 @@
         NSString *path = [[NSBundle mainBundle] pathForResource:@"custom" ofType:@"js"];
         NSString *js = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
         [webView stringByEvaluatingJavaScriptFromString:js];
+        [webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.zoom = \"0.85\";"];
+        
     }
 }
 
