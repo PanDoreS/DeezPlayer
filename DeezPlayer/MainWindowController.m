@@ -43,7 +43,7 @@ int count_timer;
 -(void)notificationCall
 {
     NSString *current_song = [webView stringByEvaluatingJavaScriptFromString:@"dzPlayer.getCurrentSong()['SNG_ID'];"];
-    if(current_song != current_song){
+    if(current_song != old_current_song){
         NSString *img_cover_url =  [NSString stringWithFormat:@"%@%@%@",
                                     @"http://api.deezer.com/2.0/album/",
                                     [webView stringByEvaluatingJavaScriptFromString:@"dzPlayer.getCurrentSong()['ALB_ID'];"],
