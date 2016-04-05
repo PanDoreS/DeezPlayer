@@ -11,17 +11,49 @@
 
 @implementation MainWindowController
 
+NSString *old_current_song;
+NSTimer *t;
+
 - (void)awakeFromNib {
     [self setBackground];
     [self setUserAgent];
     [self setUserStylesheet];
-    [[webView mainFrame] loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://deezer.com/"]]];
+    [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
+    [[webView mainFrame] loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://deezer.com/"]]];
+    t = [NSTimer scheduledTimerWithTimeInterval:0.5
+                                         target:self
+                                       selector:@selector(updateString)
+                                       userInfo:nil
+                                        repeats:YES];
 }
 
 - (void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {
     if (frame == [sender mainFrame])
         [[self window] setTitle:title];
+    
 }
+
+-(void)updateString
+{
+    NSString *current_song = [webView stringByEvaluatingJavaScriptFromString:@"dzPlayer.getCurrentSong()['SNG_ID'];"];
+    if(current_song != old_current_song){
+        NSString *img_cover_url =  [NSString stringWithFormat:@"%@%@%@",
+                                    @"http://api.deezer.com/2.0/album/",
+                                    [webView stringByEvaluatingJavaScriptFromString:@"dzPlayer.getCurrentSong()['ALB_ID'];"],
+                                    @"/image?size=medium"];
+        NSUserNotification *notification = [[NSUserNotification alloc] init];
+        notification.title = [webView stringByEvaluatingJavaScriptFromString:@"dzPlayer.getCurrentSong()['SNG_TITLE'];"];
+        notification.informativeText = [webView stringByEvaluatingJavaScriptFromString:@"dzPlayer.getCurrentSong()['ART_NAME'];"];
+        NSImage * img_data = [[NSImage alloc] initWithContentsOfURL:[NSURL URLWithString:img_cover_url]];
+        notification.contentImage = img_data;
+        [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+        
+        //t.invalidate;
+    }
+    old_current_song = current_song;
+
+}
+
 
 - (void) setUserAgent {
     NSString *safariVersion = @"5.1.7";
@@ -37,6 +69,7 @@
         userAgent = [NSString stringWithFormat:@"%@ Version/%@ Safari/%@", userAgent, safariVersion, webKitVersion];
         [webView setCustomUserAgent:userAgent];
     }
+    
 }
 
 - (void)webView:(WebView *)sender runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WebFrame *)frame {
@@ -71,11 +104,18 @@
     }
 }
 
+- (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center
+     shouldPresentNotification:(NSUserNotification *)notification
+{
+    return YES;
+}
+
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
     if(frame == [sender mainFrame]) {
         NSString *path = [[NSBundle mainBundle] pathForResource:@"custom" ofType:@"js"];
         NSString *js = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
         [webView stringByEvaluatingJavaScriptFromString:js];
+        [webView stringByEvaluatingJavaScriptFromString:@"document.body.style.zoom='80%'"];
     }
 }
 
