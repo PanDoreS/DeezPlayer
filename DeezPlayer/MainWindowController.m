@@ -12,7 +12,8 @@
 @implementation MainWindowController
 
 NSString *old_current_song;
-NSTimer *t;
+NSTimer *timer_track_notif;
+int count_timer;
 
 - (void)awakeFromNib {
     [self setBackground];
@@ -20,37 +21,58 @@ NSTimer *t;
     [self setUserStylesheet];
     [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
     [[webView mainFrame] loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://deezer.com/"]]];
-    t = [NSTimer scheduledTimerWithTimeInterval:0.5
-                                         target:self
-                                       selector:@selector(updateString)
-                                       userInfo:nil
-                                        repeats:YES];
-}
-
-- (void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {
-    if (frame == [sender mainFrame])
-        [[self window] setTitle:title];
     
 }
 
--(void)updateString
+- (void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {
+    if (frame == [sender mainFrame]){
+        [[self window] setTitle:title];
+        if(timer_track_notif == nil){
+            timer_track_notif = [NSTimer scheduledTimerWithTimeInterval:0.1
+                                                                 target:self
+                                                               selector:@selector(notificationCall)
+                                                               userInfo:nil
+                                                                repeats:YES];
+            count_timer = 0;
+        }
+        
+    }
+    
+}
+
+-(void)notificationCall
 {
     NSString *current_song = [webView stringByEvaluatingJavaScriptFromString:@"dzPlayer.getCurrentSong()['SNG_ID'];"];
-    if(current_song != old_current_song){
+    if(current_song != current_song){
         NSString *img_cover_url =  [NSString stringWithFormat:@"%@%@%@",
                                     @"http://api.deezer.com/2.0/album/",
                                     [webView stringByEvaluatingJavaScriptFromString:@"dzPlayer.getCurrentSong()['ALB_ID'];"],
-                                    @"/image?size=medium"];
+                                    @"/image?size=small"];
         NSUserNotification *notification = [[NSUserNotification alloc] init];
+        //Check if featuring artists
+        NSString *artists = [webView stringByEvaluatingJavaScriptFromString:@"dzPlayer.getCurrentSong()['SNG_CONTRIBUTORS']['featuredartist'].join(', ');"];
+        if([artists  isEqual: @""]){
+            artists = [webView stringByEvaluatingJavaScriptFromString:@"dzPlayer.getCurrentSong()['ART_NAME'];"];
+        }else{
+            artists = [NSString stringWithFormat:@"%@%@%@", [webView stringByEvaluatingJavaScriptFromString:@"dzPlayer.getCurrentSong()['ART_NAME'];"], @", ", artists];
+        }
+        //Notification
         notification.title = [webView stringByEvaluatingJavaScriptFromString:@"dzPlayer.getCurrentSong()['SNG_TITLE'];"];
-        notification.informativeText = [webView stringByEvaluatingJavaScriptFromString:@"dzPlayer.getCurrentSong()['ART_NAME'];"];
-        NSImage * img_data = [[NSImage alloc] initWithContentsOfURL:[NSURL URLWithString:img_cover_url]];
+        notification.informativeText = artists;
+        NSImage *img_data = [[NSImage alloc] initWithContentsOfURL:[NSURL URLWithString:img_cover_url]];
         notification.contentImage = img_data;
         [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
-        
-        //t.invalidate;
+        //Stop the timer
+        [timer_track_notif invalidate];
+        timer_track_notif = nil;
     }
     old_current_song = current_song;
+    if(count_timer++>20){
+        //Should not be produced, but if we can't find the current song.
+        [timer_track_notif invalidate];
+        timer_track_notif = nil;
+        NSLog(@"Can't check data");
+    }
 
 }
 
@@ -115,7 +137,7 @@ NSTimer *t;
         NSString *path = [[NSBundle mainBundle] pathForResource:@"custom" ofType:@"js"];
         NSString *js = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
         [webView stringByEvaluatingJavaScriptFromString:js];
-        [webView stringByEvaluatingJavaScriptFromString:@"document.body.style.zoom='80%'"];
+        [webView stringByEvaluatingJavaScriptFromString:@"document.body.style.zoom='80%';"];
     }
 }
 
